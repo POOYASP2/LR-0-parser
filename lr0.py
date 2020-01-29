@@ -6,4 +6,4 @@ string =string.replace(" ", "")
 string =string.replace(']','').replace('[','')
 string =string.replace("'",'').split(",")
 string = string[::2]
-print(string)
+
