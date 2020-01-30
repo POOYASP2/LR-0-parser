@@ -6,6 +6,14 @@ string = string.replace(" ", "")
 string = string.replace(']', '').replace('[', '')
 string = string.replace("'", '').split(",")
 string = string[::2]
+"""
+DFA STATE Number :{
+    "terminal or non terminal": [action, number]
+}
+action s => shift
+action r => reduce
+action g =>non-terminals production goto
+"""
 lr_table = {
     0: {
         "if": ['s', 2],
@@ -157,6 +165,23 @@ lr_table = {
         'epsilon': ['r', 5],
         '$': ['r', 5]
     }
-
+}
+"""
+production number: [pop time number, non terminal, production string]
+"""
+prod_table = {
+    1: [2, 'SPRIM', 'S->Sprim'],
+    2: [10, 'S', 'S->if X then S A'],
+    3: [6, 'S', 'S->while X S'],
+    4: [10, 'S', 'S->var = E AOP E'],
+    5: [4, 'A', 'A->else S'],
+    6: [2, 'A', 'A->epsilon'],
+    7: [6, 'X', 'X->E COP E'],
+    8: [2, 'E', 'E->var'],
+    9: [2, 'E', 'E->num'],
+    10: [2, 'AOP', 'AOP->*'],
+    11: [2, 'AOP', 'AOP->+'],
+    12: [2, 'COP', 'COP->>'],
+    13: [2, 'COP', "COP-><"]
 }
 print(lr_table[0]['if'])
