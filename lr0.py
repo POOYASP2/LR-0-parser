@@ -6,6 +6,7 @@ string = string.replace(" ", "")
 string = string.replace(']', '').replace('[', '')
 string = string.replace("'", '').split(",")
 string = string[::2]
+string.reverse()
 """
 DFA STATE Number :{
     "terminal or non terminal": [action, number]
@@ -18,7 +19,8 @@ lr_table = {
     0: {
         "if": ['s', 2],
         "while": ['s', 3],
-        "var": ['s', 4]
+        "var": ['s', 4],
+        "S": ['g', 1]
     },
     1: {
         "$": ['a', 1]
@@ -27,13 +29,14 @@ lr_table = {
         ">": ['s', 5],
         "var": ['s', 6],
         "num": ['s', 7],
-        "X": ['g', 8]
+        "X": ['g', 8, 'X'],
+        'E': ['g', 5, 'E']
     },
     3: {
         "var": ['s', 6],
         'num': ['s', 7],
-        'X': ['g', 9],
-        'E': ['g', 5]
+        'X': ['g', 9, 'X'],
+        'E': ['g', 5, 'E']
     },
     4: {
         '=': ['s', 10]
@@ -41,7 +44,7 @@ lr_table = {
     5: {
         "<": ['s', 13],
         ">": ['s', 12],
-        'COP': ['g', 11]
+        'COP': ['g', 11, 'COP']
     },
     6: {
         '*': ['r', 8],
@@ -76,16 +79,17 @@ lr_table = {
         'if': ['s', 2],
         'while': ['s', 3],
         'var': ['s', 4],
-        'S': ['g', 15]
+        'S': ['g', 15, 'S']
     },
     10: {
         'var': ['s', 6],
         'num': ['s', 7],
-        'E': ['g', 16]
+        'E': ['g', 16, 'E']
     },
     11: {
-        'var': ['s', 7],
-        'E': ['g', 17]
+        'var': ['s', 6],
+        'num': ['s', 7],
+        'E': ['g', 17, 'E']
     },
     12: {
         'var': ['r', 12],
@@ -99,7 +103,7 @@ lr_table = {
         'if': ['s', 2],
         'while': ['s', 3],
         'var': ['s', 4],
-        'S': ['g', 18]
+        'S': ['g', 18, 'S']
     },
     15: {
         'else': ['r', 3],
@@ -109,7 +113,7 @@ lr_table = {
     16: {
         '*': ['s', 20],
         '+': ['s', 21],
-        'AOP': ['g', 19]
+        'AOP': ['g', 19, 'AOP']
     },
     17: {
         'if': ['r', 7],
@@ -120,12 +124,12 @@ lr_table = {
     18: {
         'else': ['s', 23],
         'epsilon': ['s', 24],
-        'A': ['g', 22]
+        'A': ['g', 22, 'A']
     },
     19: {
         'var': ['s', 6],
         'num': ['s', 7],
-        'E': ['g', 25]
+        'E': ['g', 25, 'E']
     },
     20: {
         'var': ['r', 10],
@@ -144,7 +148,7 @@ lr_table = {
         'if': ['s', 2],
         'while': ['s', 3],
         'var': ['s', 4],
-        'S': ['g', 26]
+        'S': ['g', 26, 'S']
     },
     24: {
         '<': ['r', 6],
@@ -184,4 +188,59 @@ prod_table = {
     12: [2, 'COP', 'COP->>'],
     13: [2, 'COP', "COP-><"]
 }
-print(lr_table[0]['if'])
+
+
+def actionfunc(stack, action, inp, string):
+    print(action)
+    if action is None:
+        action = lr_table.get(stack[-1]).get('epsilon')
+        if action is None:
+            print("ERORR!!!")
+            return False
+    if action[0] == 's':
+        stack.append(inp)
+        stack.append(action[1])
+        print('shift\n')
+        return True
+    elif action[0] == 'r':
+        string.append(inp)
+        reduce = prod_table[action[1]]
+        for i in range(reduce[0]):
+            if len(stack) <= 1:
+                flag = False
+                print("ERORR!!!")
+                return False
+            stack.pop()
+        print(stack)
+        print('Reduce ' + reduce[2] + '\n')
+        newaction = lr_table.get(stack[-1]).get(reduce[1])
+        print(newaction)
+        return actionfunc(stack, newaction, reduce[1], string)
+    elif action[0] == 'g':
+        stack.append(inp)
+        stack.append(action[1])
+        return True
+    elif action[0] == 'a':
+        print("accept")
+        return False
+
+
+def parser(string):
+    # initialize the stack
+    stack = [0]
+    flag = True
+    while flag:
+        print(stack)
+        print(string)
+        if not string:
+            inp = '$'
+        else:
+            inp = string.pop()
+        action = lr_table.get(stack[-1]).get(inp)
+        print(inp)
+        print(action)
+        if not actionfunc(stack, action, inp, string):
+            break
+
+
+parser(string)
