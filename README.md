@@ -21,21 +21,9 @@ print(string)
 
 <p>string is our input to parser:</p>
 <h3> Input Example :</h3>
-<h4>['if', 'var', '+', 'num', 'then', 'var', '=', 'var', '+', 'num', '$']</h4>
+<h4>['if', 'var', '>', 'var', 'then', 'while', 'var', '>', 'var', 'var', '=', 'var', '+', 'num', '$']</h4>
 
-<h3>Output Example:</h3>
-<code>
-['if', 'var', '<', 'var', 'then', 'var', '=', 'var', '+', 'num', '$']
-[['if'], ['<', 'var', 'then', 'var', '=', 'var', '+', 'num', '$']]
-[['if', 'E'], ['var', 'then', 'var', '=', 'var', '+', 'num', '$']]
-[['if', 'E', 'COP'], ['then', 'var', '=', 'var', '+', 'num', '$']]
-[['if'], ['then', 'var', '=', 'var', '+', 'num', '$']]
-[['if', 'X', 'then', 'var', '='], ['+', 'num', '$']]
-[['if', 'X', 'then', 'var', '=', 'E'], ['num', '$']]
-[['if', 'X', 'then', 'var', '=', 'E', 'AOP'], ['$']]
-[['if', 'X', 'then'], ['$']]
-[['if', 'X', 'then', 'S'], ['$']]
-[[], ['$']]</code>
+
 
 <h2>Define table(lr(0) table) and gramer:</h2> 
 
