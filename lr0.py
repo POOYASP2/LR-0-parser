@@ -190,8 +190,8 @@ prod_table = {
 }
 
 
-def actionfunc(stack, action, inp, string):
-    print(action)
+def actionfunc(stack, action, inp, string,tree):
+    print("action:",action)
     if action is None:
         action = lr_table.get(stack[-1]).get('epsilon')
         if action is None:
@@ -211,11 +211,16 @@ def actionfunc(stack, action, inp, string):
                 print("ERORR!!!")
                 return False
             stack.pop()
+        temptree = []
+        temptree.append(stack[1::2])
+        tempstring = list(string)
+        tempstring.reverse()
+        temptree.append(tempstring)
+        tree.append(temptree)
         print(stack)
         print('Reduce ' + reduce[2] + '\n')
         newaction = lr_table.get(stack[-1]).get(reduce[1])
-        print(newaction)
-        return actionfunc(stack, newaction, reduce[1], string)
+        return actionfunc(stack, newaction, reduce[1], string,tree)
     elif action[0] == 'g':
         stack.append(inp)
         stack.append(action[1])
@@ -229,18 +234,24 @@ def parser(string):
     # initialize the stack
     stack = [0]
     flag = True
+    tree = []
+    temp = []
+    temp = list(string)
+    temp.reverse()
+    tree.append(temp)
     while flag:
-        print(stack)
-        print(string)
+        print("stack:",stack)
+        print("string:",string)
         if not string:
             inp = '$'
         else:
             inp = string.pop()
         action = lr_table.get(stack[-1]).get(inp)
-        print(inp)
-        print(action)
-        if not actionfunc(stack, action, inp, string):
+        print("input:",inp)
+        if not actionfunc(stack, action, inp, string,tree):
             break
-
+        print("--------------------------------")
+    for i in tree:
+            print(i)
 
 parser(string)
