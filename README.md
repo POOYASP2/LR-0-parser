@@ -22,7 +22,7 @@ print(string)
 <p>string is our input to parser:</p>
 <h3> Input Example :</h3>
 <h4>['if', 'var', '>', 'var', 'then', 'while', 'var', '>', 'var', 'var', '=', 'var', '+', 'num', '$']</h4>
-
+<br><br><br><br><br><br><br><br>
 
 
 <h2>Define table(lr(0) table) and gramer:</h2> 
